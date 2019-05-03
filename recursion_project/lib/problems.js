@@ -17,7 +17,9 @@
 // lucasNumber(5)   // => 11
 // lucasNumber(9)   // => 76
 function lucasNumber(n) {
+    if ( n <= 2 ) return [2, 1, 3][n];
 
+    return lucasNumber(n-1) + lucasNumber(n-2);
 }
 
 
@@ -32,8 +34,9 @@ function lucasNumber(n) {
 // sumArray([5])            // => 5
 // sumArray([5, 2])         // => 7
 // sumArray([4, 10, -1, 2]) // => 15
-function sumArray(array) {
-
+function sumArray(array, start = 0, end = array.length - 1) {
+    if ( start > end ) return 0;
+    return array[start] + sumArray(array, start + 1);
 }
 
 
@@ -44,12 +47,14 @@ function sumArray(array) {
 //
 // Examples:
 // 
-// reverseString("")            // => ""
-// reverseString("c")           // => "c"
-// reverseString("internet")    // => "tenretni"
-// reverseString("friends")     // => "sdneirf"
-function reverseString(str) {
+// console.log(reverseString(""))            // => ""
+// console.log(reverseString("c"))           // => "c"
+// console.log(reverseString("internet"))    // => "tenretni"
+// console.log(reverseString("friends"))     // => "sdneirf"
 
+function reverseString(str, startIdx = str.length - 1, endIdx = 0) {
+    if ( startIdx < endIdx ) return "";
+    return str[startIdx] + reverseString(str, startIdx - 1);
 }
 
 
@@ -67,12 +72,15 @@ function reverseString(str) {
 // pow(2, 0)    // => 1
 // pow(2, 1)    // => 2
 // pow(2, 5)    // => 32
-// pow(3, 4)    // => 81
-// pow(2, -5)   // => 0.03125
+
 function pow(base, exponent) {
-
+    if (exponent === 0) return 1;
+    if (exponent >= 1) {
+        return base * pow(base, exponent - 1);
+    } else if (exponent < 0) {
+        return 1.0 / (base * pow(base, exponent + 1));
+    }
 }
-
 
 // A 1-dimensional array is also known as a flattened array.
 // Write a method, flatten(data), that accepts a single argument. The
@@ -103,7 +111,16 @@ function pow(base, exponent) {
 //     2-dimensional array: [['some data']]
 //     3-dimensional array: [[['some data']]]
 function flatten(data) {
-
+    if (!Array.isArray(data)) return data;
+    let newArr = [];
+    data.forEach(ele => {
+        if (Array.isArray(ele)) {
+            newArr = newArr.concat(flatten(ele));
+        } else {
+            newArr.push(ele);
+        }
+    })
+    return newArr;
 }
 
 // Write a function, fileFinder(directories, targetFile), that accepts an object representing directories and a string respresenting a filename.
